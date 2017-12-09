@@ -23,9 +23,6 @@ RSpec.describe 'Board' do
 	it 'is empty when initialized' do 
 		expect(board.grid[3][5]).to eq(' ')
 	end
-
-
-
 end
 
 describe 'input check' do 
@@ -39,7 +36,6 @@ describe 'input check' do
 		board.grid[3] = ['x','x','x','o','o','x']
 		expect(board.has_room('d')).to be false
 	end
-
 end
 
 describe 'check_win' do 
@@ -96,11 +92,7 @@ describe 'check_win' do
 			expect(board.check_win).to be true 
 		end
 	end
-
-
 end
-
-
 
 describe 'column_win' do 
 	let(:board) { Board.new }
@@ -208,8 +200,7 @@ describe 'diagonal_win' do
 				x += 1
 				y -= 1 
 			end
-			board.draw_grid
-			expect(board.diagonal_win).to be true
+				expect(board.diagonal_win).to be true
 		end		
 
 		it 'returns true with 4 in a row up to the right' do 
@@ -220,10 +211,56 @@ describe 'diagonal_win' do
 				x += 1
 				y += 1 
 			end
-		
-		
-			board.draw_grid
-		expect(board.diagonal_win).to be true
+				expect(board.diagonal_win).to be true
 		end	
 
 end
+
+
+describe 'check_draw' do 
+	let( :board ) { Board.new }
+	it 'returns false on empty board' do
+		expect(board.check_draw).to be false
+	end
+
+	it 'returns true with a full board with no winner' do 
+		x = 0
+			col_a = ['x','x','o','o','x','x']
+			col_b = ['o','o','x','x','o','o']
+				7.times do 
+					x.even? ? col = col_a : col = col_b
+					board.grid[x] = col
+					x += 1
+				end
+					expect(board.check_draw).to be true
+	end		
+
+	it 'returns false with a full board with a winner' do 
+		x = 0
+		col = ['x','x','x','x','x','x']
+		7.times do
+			board.grid[x] = col 
+			x += 1
+		end 
+			expect(board.check_draw).to be false
+	end
+end
+
+describe 'drop_piece' do 
+	let ( :board ) { Board.new }
+
+	it 'drops a piece to the bottom of row selected' do 
+		board.drop_piece('a', 'x')
+		expect(board.grid[0][0]).to eq('x')
+	end
+
+	it 'drops a piece on top of pieces that are already there' do
+		board.grid[0] = ['x','o','x',' ',' ',' ']
+		board.drop_piece('a', 'o')
+
+	expect(board.grid[0]).to eq(['x','o','x','o',' ',' '])	
+end
+
+
+end
+

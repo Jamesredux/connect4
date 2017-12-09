@@ -1,5 +1,3 @@
- # -*- coding: utf-8 -*-
-
 
 class Board
 
@@ -25,12 +23,9 @@ class Board
 		6.times do 
 		line = "||#{@grid[0][x]}||#{@grid[1][x]}||#{@grid[2][x]}||#{@grid[3][x]}||#{@grid[4][x]}||#{@grid[5][x]}||#{@grid[6][x]}||"
 		puts line
-
 		x -=1
 		end
 		puts ""
-
-
 	end	
 
 	def has_room(column)
@@ -62,11 +57,20 @@ class Board
 		else
 			false
 		end
-		#should this take an argument - the last dropped piece?
 	end
 
 	def check_draw
-		
+		@board_full = true
+		@grid.each do |x|
+			if x.include?(' ')
+				@board_full = false
+			end
+		end
+		if @board_full == false || check_win
+			false
+		else
+			true
+		end
 	end
 
 	def row_win
@@ -77,15 +81,13 @@ class Board
 					@grid.each do |x|
 					row_string<<x[y]
 					end 
-			
-				if row_string.include?("xxxx") || row_string.include?("oooo")
+			if row_string.include?("xxxx") || row_string.include?("oooo")
 				@win_in_row = true
 			end
 			y +=1
 		end
 			@win_in_row
 	end
-
 
 	def column_win
 		@win_in_col = false
@@ -104,10 +106,8 @@ class Board
 		# the hashes contain the coordinates of the start of the diagonal lines then i iterate through each one
 		# there are 6 down and 6 up diagonals that could contain a winning line and every one is checked in this method each time 
 		# a piece is dropped
-
 		up_diag_start_index = { 'a'=> [0,0], 'b'=>[0,1], 'c'=>[0,2], 'd'=>[1,0], 'e'=>[2,0], 'f'=>[3,0] }
-			 
-
+		
 		up_diag_start_index.each do |key, value|
 			diag_string = ""
 				x = value[0]
@@ -139,23 +139,5 @@ class Board
 				end
 		@win_on_diag
 	end
-
-
-
-
-	def create_full_board
-		x = 0
-			col_a = ['o','x','o','x','x','x']
-			col_b = ['o','o','x','o','o','o']
-				7.times do 
-					x.even? ? col = col_a : col = col_b
-					@grid[x] = col
-					x += 1
-				end
-			self.draw_grid	
-
-	end
-
-
-
+	
 end	

@@ -3,10 +3,9 @@ require_relative './player.rb'
 
 
 class Game
+	attr_accessor :player_turn
 	def initialize
 		@game_over = false
-		choose_players
-		@player_turn = @player_1
 		@board = Board.new
 
 	end
@@ -14,13 +13,15 @@ class Game
 	def choose_players
 		puts "Player 1, you will play as \'x\' what is your name"
 		player_1_name = gets.chomp
-		@player_1 = Player.new(player_1_name, 'x')
+		@player_1 = Player.new(player_1_name, "x")
 		puts "Player 2, you will play as \'o\' what is your name"
 		player_2_name = gets.chomp
-		@player_2 = Player.new(player_2_name, 'o')
+		@player_2 = Player.new(player_2_name, "o")
 	end
 
 	def start_game
+		choose_players
+		@player_turn = @player_1
 		until @game_over
 			play_game
 		end
@@ -34,9 +35,6 @@ class Game
 		winner if @board.check_win
 		game_draw if @board.check_draw
 		switch_player
-
-
-
 	end
 
   def get_choice
@@ -70,12 +68,20 @@ class Game
 
 	def game_draw
 		@game_over = true
+		@board.draw_grid
 		puts "Stalemate -- The game is a draw"
 		play_again
 	end
 
 	def play_again
-		#method to give option to start a new game
+		puts "Would you like to play again, type y for yes and any other key to exit."
+		user_choice = gets.chomp
+		if user_choice == 'y'
+			new_game = Game.new
+			new_game.start_game
+		else
+			puts "Thankyou for playing, goodbye."		
+		end
 	end
 
 
@@ -90,5 +96,5 @@ class Game
 
 end
 
-game = Game.new
-game.start_game
+#game = Game.new
+#game.start_game
